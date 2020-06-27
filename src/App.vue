@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+<<<<<<< HEAD
     <router-view></router-view>
   </div>
 </template>
@@ -26,3 +27,14 @@
   }
 }
 </style>
+=======
+      <router-view />
+  </div>
+</template>
+
+<script>
+export default {
+    name: 'App',
+}
+</script>
+>>>>>>> 73e6c92e109b1f5d0015e5e8bdfb53a167bab26e
