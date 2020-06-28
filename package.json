@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-<<<<<<< HEAD
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-=======
     "build": "vue-cli-service build"
->>>>>>> 73e6c92e109b1f5d0015e5e8bdfb53a167bab26e
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
+    "@fortawesome/free-brands-svg-icons": "^5.13.1",
+    "@fortawesome/free-regular-svg-icons": "^5.13.1",
+    "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/vue-fontawesome": "^0.1.10",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
@@ -20,17 +20,11 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
-<<<<<<< HEAD
-    "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-router": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-=======
-    "@vue/cli-plugin-router": "~4.4.0",
-    "@vue/cli-service": "~4.4.0",
->>>>>>> 73e6c92e109b1f5d0015e5e8bdfb53a167bab26e
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
