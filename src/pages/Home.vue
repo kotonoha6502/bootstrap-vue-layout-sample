@@ -128,7 +128,7 @@
 
 <script>
 // @ is an alias to /src
-import PkInput from '@/components/Form/PkInput.vue'
+import PkInput from '@/components/Form/PkInput'
 
 export default {
   name: 'Home',
