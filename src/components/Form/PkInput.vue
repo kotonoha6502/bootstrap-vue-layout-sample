@@ -59,7 +59,6 @@
           <slot name="append"></slot>
         </div>
       </div>
-
       <template v-if="!outlined">
         <transition name="horizontal">
           <div
