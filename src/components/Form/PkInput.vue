@@ -6,54 +6,58 @@
   >
     <b-col
       cols="12"
-      class="row no-wrap"
-      :class="{ 'pk-input__shell': focused }"
+      class="pk-input__shell"
+      :class="{ 'pk-input__shell--focused': focused }"
       :style="shellStyle"
     >
-
       <div
-        class="pk-input__prepend-slot"
-        :style="prependStyle"
+        class="row no-wrap pk-input__control"
+        :style="controlStyle"
       >
-        <slot name="prepend"></slot>
-      </div>
-
-      <div
-        class="pk-input__form-container"
-        style="width: auto; position: relative; min-width: 0; max-width: 100%; flex: 10000 1 0"
-      >
-        <input
-          type="text"
-          class="pk-input__native"
-          :placeholder="placeholderValue"
-          :style="innerShellStyle"
-          :maxlength="maxLength"
-          :disabled="disable || readonly"
-          @focus="!readonly && (focused = true)"
-          @blur="focused = false"
-          v-model="valueModel"
-        />
         <div
-            class="pk-input__label"
-            :style="labelStyle"
+          class="pk-input__prepend-slot"
+          :style="prependStyle"
         >
-          {{ label }}
+          <slot name="prepend"></slot>
         </div>
-      </div>
 
-      <template v-if="clearable && !!valueModel">
         <div
-            class="pk-input__clear-btn"
+          class="pk-input__form-container"
+          style="width: auto; position: relative; min-width: 0; max-width: 100%; flex: 10000 1 0"
         >
-          <v-fa :icon="clearIcon" size="md" @click.stop="valueModel = ''" />
+          <input
+            type="text"
+            class="pk-input__native"
+            :placeholder="placeholderValue"
+            :style="innerShellStyle"
+            :maxlength="maxLength"
+            :disabled="disable || readonly"
+            @focus="!readonly && (focused = true)"
+            @blur="focused = false"
+            v-model="valueModel"
+          />
+          <div
+              class="pk-input__label"
+              :style="labelStyle"
+          >
+            {{ label }}
+          </div>
         </div>
-      </template>
 
-      <div
-          class="pk-input__append-slot"
-          :style="appendStyle"
-      >
-        <slot name="append"></slot>
+        <template v-if="clearable && !!valueModel">
+          <div
+              class="pk-input__clear-btn"
+          >
+            <v-fa :icon="clearIcon" size="md" @click.stop="valueModel = ''" />
+          </div>
+        </template>
+
+        <div
+            class="pk-input__append-slot"
+            :style="appendStyle"
+        >
+          <slot name="append"></slot>
+        </div>
       </div>
 
       <template v-if="!outlined">
@@ -122,10 +126,6 @@ export default {
           : 'none'
           )
 
-      const padding = (this.filled || this.outlined)
-        ? '0 12px'
-        : '0'
-
       const borderRadius = this.square
         ? '0'
         : (this.outlined
@@ -139,8 +139,17 @@ export default {
         [border]: `thin ${ this.readonly ? 'dashed' : 'solid'} ${borderColor}`,
         filter: this.filled ? filter : 'none',
         backgroundColor,
-        padding,
         borderRadius,
+      }
+    },
+    controlStyle() {
+      const padding = (this.filled || this.outlined)
+          ? '0 12px'
+          : '0'
+
+      return {
+        margin: '0',
+        padding,
       }
     },
     labelStyle () {
@@ -161,14 +170,10 @@ export default {
       const paddingTop = this.label !== void 0 ? '24px' : '16px'
       const paddingBottom = this.label !== void 0 ? '8px' : '16px'
 
-      const border = this.outlined && this.focused
-        ? `2px solid ${this.focusLineColor}`
-        : 'none'
       return {
         padding: `${paddingTop} 0 ${paddingBottom}`,
         cursor: this.disable ? 'not-allowed' : 'inherit',
         filter: this.disable ? 'opacity(0.55)' : 'inherit',
-        border,
       }
     },
     focusLineColor() {
@@ -220,6 +225,10 @@ export default {
 </script>
 
 <style scoped>
+  .pk-input__shell {
+    padding: 0;
+  }
+
   input[type="text"] {
     overflow: visible;
     font-weight: 400;
@@ -232,7 +241,11 @@ export default {
     font-size: 14px;
     width: 100%;
     min-width: 0;
-}
+  }
+
+  .pk-input__control {
+    margin: 0;
+  }
 
   .pk-input__label {
     pointer-events: none;
