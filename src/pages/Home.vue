@@ -1,31 +1,9 @@
 <template>
   <b-container fluid>
     <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4" class="text-left">
-        <pk-input
-          v-model="inputText"
-          label="Default"
-          clearable
-          clear-icon="times"
-        >
-          <template v-slot:prepend>
-            <v-fa icon="home" />
-          </template>
-
-          <template v-slot:append>
-            <v-fa icon="edit" />
-          </template>
-        </pk-input>
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            filled
-            label="Filled"
-            clearable
+            label="Default field"
         />
       </b-col>
     </b-row>
@@ -33,21 +11,21 @@
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            color="purple"
+            label="outlined"
             outlined
-            label="Colored"
+            square
+            clearable
+            color="purple"
         />
       </b-col>
     </b-row>
 
     <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4" class="text-left">
+      <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            label="Colored label"
+            label="Label colored"
             label-color="orange"
-            readonly
+            outlined
             color="green"
         />
       </b-col>
@@ -56,41 +34,8 @@
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            label="Label(stacked)"
-            label-stacked
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            v-model="inputText"
-            placeholder="プレースホルダー"
-            label-stacked
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            v-model="inputText"
-            label="Label and placeholder"
-            placeholder="プレースホルダー"
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            v-model="inputText"
-            placeholder="プレースホルダー"
+            label="Filled"
             filled
-            bg-color="pink"
-            label-stacked
         />
       </b-col>
     </b-row>
@@ -98,12 +43,26 @@
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            label="Label(stacked) and placeholder"
-            square
+            label="Outlined & filled"
+            filled
             outlined
-            placeholder="プレースホルダー"
-            label-stacked
+        >
+          <template v-slot:append>
+            <img src="../assets/logo.png" width="24px" />
+          </template>
+
+          <template v-slot:prepend>
+            <v-fa icon="user" style="color: dodgerblue"/>
+          </template>
+        </pk-input>
+      </b-col>
+    </b-row>
+
+    <b-row class="mt-3 mb-3">
+      <b-col offset="1" cols="4">
+        <pk-input
+            label="Label(stacked)"
+            stack-label
         />
       </b-col>
     </b-row>
@@ -111,14 +70,41 @@
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
         <pk-input
-            v-model="inputText"
-            label="Label(stacked) and placeholder"
-            filled
-            placeholder="プレースホルダー"
-            label-stacked
+          v-model="inputText"
+          placeholder="プレースホルダー"
         >
           <template v-slot:prepend>
-            <v-fa icon="home" />
+            <v-fa icon="home" size="lg" style="color: rebeccapurple" />
+          </template>
+        </pk-input>
+      </b-col>
+    </b-row>
+
+    <b-row class="mt-3 mb-3">
+      <b-col offset="1" cols="4">
+        <pk-input
+          label="ラベルとプレースホルダー"
+          v-model="inputText"
+          placeholder="ここに入力"
+          outlined
+          bg-color="lavender"
+          color="brown"
+        />
+      </b-col>
+    </b-row>
+
+    <b-row class="mt-3 mb-3">
+      <b-col offset="1" cols="4">
+        <pk-input
+          label="Label(stacked) & placeholder"
+          v-model="inputText"
+          outlined
+          stack-label
+          clearable
+          placeholder="ここに入力"
+        >
+          <template v-slot:append>
+            <v-fa icon="edit" size="lg" style="color: orange"/>
           </template>
         </pk-input>
       </b-col>

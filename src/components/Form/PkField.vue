@@ -3,8 +3,8 @@
     :class="classes"
     style="tab-index: -1; padding: 0; outline: none;"
     tabindex="2"
-    @focus.stop.prevent="focused = true"
-    @blur.stop.prevent="focused = false"
+    @focus.stop.prevent="(focused = true) && $emit('focus', $el)"
+    @blur.stop.prevent="(focused = false) || $emit('focus', $el)"
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
@@ -16,70 +16,58 @@
       <div
         class="pk-field__inner-shell"
         :style="innerShellStyle"
+      />
+      <div
+        class="pk-field__control-container"
+        :style="controlContainerStyle"
       >
-        <template v-if="!outlined">
-          <transition name="horizontal">
-            <div
-                class="pk-field__inner-shell--focused"
-                :style="{ backgroundColor: activeInnerShellColor }"
-                v-if="focused"
+        <div
+            class="pk-field__prepend-slot"
+            :style="prependStyle"
+        >
+          <slot name="prepend"></slot>
+        </div>
+
+        <div
+          class="pk-field__native"
+          :style="nativeStyle"
+        >
+          <div
+            class="pk-field__label self-center full-width no-outline"
+            :style="labelStyle"
+          >
+            {{ label }}
+          </div>
+
+          <div
+            class="self-center full-width no-outline"
+            :style="placeholderStyle"
+          >
+            {{ placeholder }}
+          </div>
+
+          <slot name="control" v-bind="controlSlotScope">
+            <div class="self-center full-width no-outline">{{ value }}</div>
+          </slot>
+        </div>
+
+        <template v-if="clearable && !!valueModel">
+          <div
+            class="pk-field__clear-btn"
+            style="z-index: 1;"
+          >
+            <v-fa
+              :icon="clearIconName"
+              @click.stop="valueModel = null"
             />
-          </transition>
+          </div>
         </template>
 
         <div
-          class="pk-field__control-container"
-          :style="controlContainerStyle"
+            class="pk-field__append"
+            :style="appendStyle"
         >
-          <div
-              class="pk-field__prepend-slot"
-              :style="prependStyle"
-          >
-            <slot name="prepend"></slot>
-          </div>
-
-          <div
-            class="pk-field__native"
-            :style="nativeStyle"
-          >
-            <div
-              class="pk-field__label"
-              :style="labelStyle"
-            >
-              {{ label }}
-            </div>
-
-            <template v-if="shouldShowPlaceholder">
-              <div
-                class="self-center full-width no-outline"
-                style="transition: all 0.3s; font-size: 14px; color: #9e9e9e"
-              >
-                {{ placeholder }}
-              </div>
-            </template>
-            <slot v-bind:value="valueModel">
-              <div class="self-center full-width no-outline">{{ value }}</div>
-            </slot>
-          </div>
-
-          <template v-if="clearable && !!valueModel">
-            <div
-              class="pk-field__clear-btn"
-              style="z-index: 1;"
-            >
-              <v-fa
-                :icon="clearIconName"
-                @click.stop="valueModel = null"
-              />
-            </div>
-          </template>
-
-          <div
-              class="pk-field__append"
-              :style="appendStyle"
-          >
-            <slot name="append"></slot>
-          </div>
+          <slot name="append"></slot>
         </div>
       </div>
     </b-col>
@@ -90,7 +78,7 @@
 
 const defaultOutlineColor = '#c2c2c2'
 const hoveredOutlineColor = "#151515"
-const defaultLabelColor = '#5e5e5e'
+const defaultLabelColor = '#9f9f9f'
 const defaultActiveColor = '#3d91ff'
 const defaultBgColor = '#f2f2f2'
 
@@ -102,7 +90,7 @@ export default {
   props: {
     // behavior
     clearable: Boolean,
-    stackedLabel: Boolean,
+    stackLabel: Boolean,
 
     // content
     clearIcon: String,
@@ -160,12 +148,14 @@ export default {
 
     outerShellStyle() {
       const border = this.outlined ? 'border' : 'border-bottom'
+
       const borderColor = this.focused
-          ? (hoveredOutlineColor)
+          ? (this.outlined ? (this.color ?? defaultActiveColor) : hoveredOutlineColor)
           : (this.hovered
             ? hoveredOutlineColor
             : defaultOutlineColor
             )
+
       const backgroundColor = this.bgColor ?? (this.filled ? defaultBgColor : 'none')
 
       const filter = this.focused
@@ -195,16 +185,39 @@ export default {
     },
 
     innerShellStyle() {
+      if (this.outlined) {
+        return {
+          position: 'absolute',
+          border: `1px solid ${this.color ?? defaultActiveColor }`,
+          width: '100%',
+          height: '100%',
+          left: '0',
+          top: '0',
+          opacity: this.focused ? '1.0' : '0.0',
+          transition: 'opacity .3s linear',
+        }
+      }
+      else {
+        return {
+          position: 'absolute',
+          height: '100%',
+          width: '100%',
+          top: '1px',
+          boxSizing: 'border-box',
+          borderBottom: `2px solid ${this.color ?? defaultActiveColor}`,
+          transition: 'transform .3s ease-in-out',
+          transform: `scale(${this.focused ? '1.0' : '0.0'}, 1.0)`
+        }
+      }
     },
 
     controlContainerStyle() {
-      const padding = (this.filled || this.outlined)
+      const margin = (this.filled || this.outlined)
           ? '0 12px'
           : '0'
 
       return {
-        margin: '0',
-        padding,
+        margin,
         width: 'auto',
         display: 'flex',
         position: 'relative',
@@ -219,7 +232,7 @@ export default {
           ? this.labelColor ?? defaultLabelColor
           : this.labelColor ?? this.color ?? defaultActiveColor
 
-      const transform = (this.focused || this.valueModel !== '' || this.stackedLabel)
+      const transform = (this.focused || this.valueModel !== '' || this.stackLabel)
           ? 'translateY(-40%) scale(0.75)'
           : 'none'
 
@@ -229,6 +242,20 @@ export default {
       }
     },
 
+    placeholderStyle () {
+      return {
+        position: 'absolute',
+        pointerEvents: 'none',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        top: this.outlined ? '24px' : '18px',
+        lineHeight: '24px',
+        color: '#9e9e9e',
+        transition: 'all 0.3s',
+        opacity: this.shouldShowPlaceholder ? '1.0' : '0'
+      }
+    },
 
     nativeStyle () {
       const paddingTop = this.label !== void 0 ? '24px' : '16px'
@@ -271,11 +298,11 @@ export default {
     },
 
     hasPrependSlot () {
-      return !!this.$slots.prepend
+      return !!this.$scopedSlots.prepend
     },
 
     hasAppendSlot () {
-      return !!this.$slots.append
+      return !!this.$scopedSlots.append
     },
 
     shouldShowPlaceholder () {
@@ -283,15 +310,20 @@ export default {
 
       return this.label === void 0
         ? true
-        : this.stackedLabel || this.focused
+        : this.stackLabel || this.focused
     },
 
     clearIconName () {
       return this.clearIcon ?? defaultClearBtnIcon
     },
 
-    activeInnerShellColor () {
-      return this.color ?? defaultActiveColor
+    controlSlotScope () {
+      return {
+        field: this.$el,
+        focus: this.__focus,
+        blur: this.__blur,
+        hasValue: this.hasValue,
+      }
     },
 
     valueModel: {
@@ -302,6 +334,16 @@ export default {
         this.$emit('input', newValue)
       }
     },
+  },
+
+  methods: {
+    __focus () {
+      this.focused = true
+    },
+
+    __blur () {
+      this.focused = false
+    }
   }
 }
 </script>
@@ -332,7 +374,6 @@ export default {
     top: 18px;
     line-height: 20px;
     font-weight: 400;
-    letter-spacing: .00937em;
     transform-origin: left top;
     transition:
         transform 0.36s cubic-bezier(0.4,0,0.2,1),
