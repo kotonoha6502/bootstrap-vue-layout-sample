@@ -64,7 +64,7 @@
         <b-col offset="1" cols="4">
           <pk-field
               label="Label(stacked)"
-              stacked-label
+              stack-label
           />
         </b-col>
       </b-row>
@@ -113,7 +113,7 @@
 </template>
 <script>
 import PkField from "@/components/Form/PkField.vue";
-import PkInput from "@/components/Form/_PkInput";
+import PkInput from "@/components/Form/PkInput";
 export default {
   name: 'About',
   components: {PkInput, PkField},
