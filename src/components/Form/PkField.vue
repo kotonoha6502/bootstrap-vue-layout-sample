@@ -78,7 +78,7 @@
 
 const defaultOutlineColor = '#c2c2c2'
 const hoveredOutlineColor = "#151515"
-const defaultLabelColor = '#9f9f9f'
+const defaultLabelColor = '#7e7e7e'
 const defaultActiveColor = '#3d91ff'
 const defaultBgColor = '#f2f2f2'
 
@@ -289,11 +289,12 @@ export default {
         paddingRight: this.hasPrependSlot ? '12px' : 'none',
       }
     },
+    
     appendStyle () {
       return {
         display: 'inline-flex',
         alignItems: 'center',
-        marginLeft: this.hasPrependSlot ? '12px' : 'none',
+        marginLeft: this.hasAppendSlot ? '12px' : 'none',
       }
     },
 
@@ -349,22 +350,6 @@ export default {
 </script>
 
 <style scoped>
-  .pk-field {
-    
-  }
-  
-  .pk-field__outer-shell {
-    
-  }
-  
-  .pk-field__inner-shell {
-    
-  }
-  
-  .pk-field__control-container {
-
-  }
-
   .pk-field__label {
     pointer-events: none;
     position: absolute;
@@ -392,26 +377,4 @@ export default {
     color: #222222;
   }
   
-  .pk-field__inner-shell--focused {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 2px;
-    bottom: -1px;
-    right: 0;
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .horizontal-enter,
-  .horizontal-leave-to {
-    transform: scale(0, 1.0)
-  }
-  .horizontal-enter-to,
-  .horizontal-leave {
-    transform: scale(1.0, 1.0)
-  }
-
-  .native {
-
-  }
 </style>
