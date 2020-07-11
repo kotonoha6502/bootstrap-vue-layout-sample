@@ -1,12 +1,45 @@
 <template>
   <b-container fluid>
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="Default field"
-        />
-      </b-col>
-    </b-row>
+    <b-select :options="options" v-model="position"/>
+    <b-checkbox v-model="seamless" />
+    <b-button
+      variant="link"
+      @click="showDialog = !showDialog"
+    >
+      Show Dialog
+    </b-button>
+
+    <pk-dialog
+      v-model="showDialog"
+      :seamless="seamless"
+      :position="position"
+    >
+      <b-container>
+        <b-card style="width: 300px">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          </p>
+        </b-card>
+      </b-container>
+    </pk-dialog>
 
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
@@ -114,16 +147,28 @@
 
 <script>
 // @ is an alias to /src
-import PkInput from '@/components/Form/PkInput'
+import PkInput from '@/components/Form/PkInput.vue'
+import PkDialog from '@/components/PkDialog.vue'
 
 export default {
   name: 'Home',
   components: {
     PkInput,
+    PkDialog,
   },
   data () {
     return {
       inputText: "",
+      showDialog: false,
+      position: "standard",
+      seamless: false,
+      options: [
+        { text: '中央', value: 'standard' },
+        { text: '上', value: 'top' },
+        { text: '下', value: 'bottom' },
+        { text: '左', value: 'left' },
+        { text: '右', value: 'right' },
+      ]
     }
   }
 }
