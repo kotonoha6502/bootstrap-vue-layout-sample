@@ -15,7 +15,6 @@
       <b-col
         :class="containerClasses"
         :style="containerStyles"
-        :cols="cols"
       >
         <div
           :style="justifierStyles"
@@ -40,23 +39,8 @@ export default {
         return ['standard', 'top', 'bottom', 'right', 'left'].includes(v)
       }
     },
-    cols: {
-      type: [String, Number],
-      default: 12,
-      validator (v) {
-        const numV = Number(v)
-        if (isNaN(numV)) {
-          return false
-        }
-        if (numV !== (numV|0)) {
-          return false
-        }
-        if (numV <= 0 || numV > 12) {
-          return false
-        }
-        return true
-      }
-    },
+    fullWidth: Boolean,
+    fullHeight: Boolean,
     seamless: Boolean,
   },
   data () {
@@ -107,7 +91,6 @@ export default {
     },
     containerClasses () {
       return {
-
       }
     },
     containerStyles () {
@@ -115,7 +98,10 @@ export default {
         pointerEvents: 'none',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: this.position === 'right' ? 'flex-end' : (this.position === 'left' ? 'start' : 'center')
+        justifyContent: this.position === 'right' ? 'flex-end' : (this.position === 'left' ? 'start' : 'center'),
+        padding: 0,
+        height: this.fullHeight ? 'calc(100vh - 48px)' : 'none',
+        maxHeight: 'calc(100vh - 48px)',
       }
     },
     justifierStyles () {
@@ -123,6 +109,8 @@ export default {
         pointerEvents: 'all',
         transition: 'transform .2s',
         transform: this.__contentTransform,
+        width: this.fullWidth ? 'calc(100vw - 48px)' : 'none',
+        maxWidth: 'calc(100vw - 48px)',
       }
     },
     verticalAlign () {
@@ -146,13 +134,13 @@ export default {
         case 'standard':
           return this.showDialogContent ? 'scale(1.0, 1.0)' : 'scale(0, 0)'
         case 'top':
-          return `translate(0, ${this.showDialogContent ? 0 : 'calc(0 - 100%)'})`
+          return `translate(0, ${this.showDialogContent ? 0 : 'calc(0px - 100%)'})`
         case 'bottom':
           return `translate(0, ${this.showDialogContent ? 0 : 'calc(100%)'})`
         case 'left':
-          return `translate(${this.showDialogContent ? 0 : 'calc(0px - 100%)'}, 0)`
+          return `translate(${this.showDialogContent ? 0 : 'calc(-16px - 100%)'}, 0)`
         case 'right':
-          return `translate(${this.showDialogContent ? 0 : 'calc(100%)'}, 0)`
+          return `translate(${this.showDialogContent ? 0 : 'calc(16px + 100%)'}, 0)`
       }
     },
   },
