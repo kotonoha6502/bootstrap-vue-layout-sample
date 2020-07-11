@@ -46,8 +46,9 @@
         <b-col offset="1" cols="4">
           <pk-field
               label="Outlined & filled"
-              filled
               outlined
+              readonly
+              value="この値はreadonlyです"
           >
             <template v-slot:append>
               <img src="../assets/logo.png" width="24px" />
@@ -65,6 +66,8 @@
           <pk-field
               label="Label(stacked)"
               stack-label
+              value="無理"
+              disabled
           />
         </b-col>
       </b-row>

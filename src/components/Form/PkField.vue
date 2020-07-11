@@ -3,7 +3,7 @@
     :class="classes"
     style="tab-index: -1; padding: 0; outline: none;"
     tabindex="2"
-    @focus.stop.prevent="(focused = true) && $emit('focus', $el)"
+    @focus.stop.prevent="editable && (focused = true) && $emit('focus', $el)"
     @blur.stop.prevent="(focused = false) || $emit('focus', $el)"
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
@@ -102,7 +102,7 @@ export default {
     maxLength: Number,
 
     // state
-    disable: Boolean,
+    disabled: Boolean,
     readonly: Boolean,
     loading: Boolean,
 
@@ -135,7 +135,7 @@ export default {
         'pk-field--labeled': this.label !== void 0,
         'pk-field--dense': this.dense,
         'pk-field--readonly': this.readonly,
-        'pk-field--disabled': this.disable,
+        'pk-field--disabled': this.disabled,
       }
     },
 
@@ -277,8 +277,8 @@ export default {
         background: 'none',
         color: 'rgba(0,0,0,0.87)',
         padding: `${paddingTop} 0 ${paddingBottom}`,
-        cursor: this.disable ? 'not-allowed' : 'inherit',
-        filter: this.disable ? 'opacity(0.55)' : 'inherit',
+        cursor: this.disabled ? 'not-allowed' : 'inherit',
+        filter: this.disabled ? 'opacity(0.55)' : 'inherit',
       }
     },
 
@@ -323,8 +323,17 @@ export default {
         field: this.$el,
         focus: this.__focus,
         blur: this.__blur,
+        editable: this.editable,
         hasValue: this.hasValue,
       }
+    },
+
+    editable () {
+      return !this.readonly && !this.disabled
+    },
+
+    hasValue () {
+      return this.value !== void 0 && this.value !== null && ('' + this.value).length > 0
     },
 
     valueModel: {
