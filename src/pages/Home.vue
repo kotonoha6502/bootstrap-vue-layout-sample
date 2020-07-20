@@ -13,13 +13,68 @@
       v-model="showDialog"
       :seamless="seamless"
       :position="position"
+      no-esc-dismiss
     >
-      <b-card style="overflow: auto; height: 100%">
+      <b-card style="width: 500px; overflow: auto; height: 100%">
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
         </p>
+        <b-button
+          variant="primary"
+          @click="showDialog = false"
+        >
+          OK
+        </b-button>
+        <pk-input label="inner dialog" v-model="inputText" />
+        <table>
+          <tbody>
+            <tr>
+              <th>title</th>
+              <th>description</th>
+            </tr>
+            <tr>
+              <td>Icecream Island</td>
+              <th>
+                <b-button
+                  variant="link"
+                  @click="showMoreDialog = true"
+                >
+                  Go
+                </b-button>
+              </th>
+            </tr>
+            <tr>
+              <td>Orange Ocean</td>
+              <th><b-button variant="link">Go</b-button></th>
+            </tr>
+            <tr>
+              <td>Rainbaw Resort</td>
+              <th><b-button variant="link">Go</b-button></th>
+            </tr>
+          </tbody>
+        </table>
       </b-card>
     </pk-dialog>
+
+      <pk-dialog
+        v-model="showMoreDialog"
+      >
+        <b-card
+          style="width: 480px; overflow: auto; height: 300px;"
+        >
+                  <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+        </p>
+        <b-button
+          variant="primary"
+          @click="okHandler"
+        >
+          OK
+        </b-button>
+
+        </b-card>
+      </pk-dialog>
+
 
     <b-row class="mt-3 mb-3">
       <b-col offset="1" cols="4">
@@ -29,6 +84,7 @@
             square
             clearable
             color="purple"
+            type="textarea"
         />
       </b-col>
     </b-row>
@@ -49,6 +105,7 @@
         <pk-input
             label="Filled"
             filled
+            v-model="inputText"
         />
       </b-col>
     </b-row>
@@ -140,6 +197,7 @@ export default {
     return {
       inputText: "",
       showDialog: false,
+      showMoreDialog: false,
       position: "standard",
       seamless: false,
       options: [
@@ -149,6 +207,11 @@ export default {
         { text: '左', value: 'left' },
         { text: '右', value: 'right' },
       ]
+    }
+  },
+  methods: {
+    okHandler (e) {
+      this.showMoreDialog = false
     }
   }
 }

@@ -10,7 +10,7 @@
       :style="innerStyles"
       :align-v="verticalAlign"
       :align-h="horizontalAlign"
-      @click="!seamless && $emit('input', false)"
+      @click="!seamless && __onBackdropClick()"
     >
       <b-col
         :class="containerClasses"
@@ -19,8 +19,14 @@
         <div
           :style="justifierStyles"
           @click.stop.prevent="f=>f"
+          @keyup.esc="__onEscape"
+          tabindex="0"
+          ref="justifierRef"
         >
-          <slot></slot>
+          <slot
+            name="default"
+            v-bind="contentSlotScopes"
+          />
         </div>
       </b-col>
     </b-row>
@@ -28,10 +34,33 @@
 </template>
 
 <script>
+
+const childHasFocus = (el, focusedEl) => {
+  if (el === undefined || focusedEl === undefined) {
+    return false
+  }
+
+  if (el.contains(focusedEl)) {
+    return true
+  }
+
+  for (let next = el.nextElementSibling; next !== null; next = next.nextElementSibling) {
+    if (next.contains(focusedEl)) {
+      return true
+    }
+  }
+
+  return false
+}
+
 export default {
   name: 'PkDialog',
   props: {
-    value: Boolean,
+    // Behavior
+    seamless: Boolean,
+    persistent: Boolean,
+    noEscDismiss: Boolean,
+    noBackdropDismiss: Boolean,
     position: {
       type: String,
       default: 'standard',
@@ -39,9 +68,11 @@ export default {
         return ['standard', 'top', 'bottom', 'right', 'left'].includes(v)
       }
     },
+    // Model
+    value: Boolean,
+    // Style
     fullWidth: Boolean,
     fullHeight: Boolean,
-    seamless: Boolean,
   },
   data () {
     return {
@@ -52,6 +83,9 @@ export default {
     }
   },
   computed: {
+    useBackdrop () {
+      return !this.seamless
+    },
     classes () {
       return {
         'pk-dialog': true,
@@ -104,10 +138,16 @@ export default {
         maxHeight: 'calc(100vh - 48px)',
       }
     },
+    justifierClasses () {
+      return {
+
+      }
+    },
     justifierStyles () {
       return {
+        outline: 'none',
         pointerEvents: 'all',
-        transition: 'transform .2s',
+        transition: 'transform .32s',
         transform: this.__contentTransform,
         width: this.fullWidth ? 'calc(100vw - 48px)' : 'none',
         maxWidth: 'calc(100vw - 48px)',
@@ -143,34 +183,104 @@ export default {
           return `translate(${this.showDialogContent ? 0 : 'calc(16px + 100%)'}, 0)`
       }
     },
+    contentSlotScopes () {
+      return {
+        close: this.close,
+        shake:() => {},
+      }
+    },
   },
   watch: {
     value: async function (newValue) {
-      if (newValue) {
-        this.valueModel = !!newValue
+      if(newValue) {
         await this.__doOpen()
+        return
       }
       else {
-        await this.__doHide()
-        this.valueModel = !!newValue
+        await this.__doClose()
+        return
       }
+    },
+    useBackdrop (v) {
+      this.__preventFocusOut(v)
     },
   },
   methods: {
+    close () {
+      this.__emitValue(false)
+    },
+    shake () {
+      return this.__doShake()
+        .then(() => {
+          this.$emit('shake')
+        })
+    },
+    focus () {
+      this.$nextTick(() => this.$refs.justifierRef.focus())
+    },
     async __doOpen () {
+      this.valueModel = true
+
+      this.$emit('before-open')
       await this.__sleep(1)
-      this.showBackdrop = true
+
+      if (this.useBackdrop) {
+        this.showBackdrop = true
+        this.__preventFocusOut(true)
+      }
       await this.__sleep(100)
+
       this.showDialogContent = true
+      this.$emit('open')
+      this.focus()
     },
     async __doClose () {
-      await this.__doHide()
-      this.valueModel = false
-    },
-    async __doHide () {
+      this.$emit('before-close')
+
       this.showDialogContent = false
-      this.showBackdrop = false
+      if (this.useBackdrop) {
+        this.showBackdrop = false
+        this.__preventFocusOut(false)
+      }
       await this.__sleep(300)
+
+      this.valueModel = false
+      this.$emit('close')
+    },
+    async __doShake () {
+      const node = this.$refs.justifierRef
+      node.classList.remove('pk-dialog__justifier--animation-shake')
+      node.classList.add('pk-dialog__justifier--animation-shake')
+      clearTimeout(this.shakeTimeout)
+      this.shakeTimeout = setTimeout(() => {
+        node.classList.remove('pk-dialog__justifier--animation-shake')
+      }, 120)
+    },
+    async __onBackdropClick () {
+      if (!this.persistent && !this.noBackdropDismiss) {
+        this.close()
+      }
+      else {
+        this.shake()
+      }
+    },
+    __onEscape (e) {
+      if (!this.persistent && !this.noEscDismiss) {
+        this.$emit('escape')
+        this.close()
+      }
+      else {
+        this.shake()
+      }
+    },
+    __preventFocusOut (state) {
+      const action = `${state === true ? 'add' : 'remove'}EventListener`
+      document.body[action]('focusin', this.__onFocusChange)
+    },
+    __onFocusChange(e) {
+      if (this.showDialogContent && !childHasFocus(this.$el, e.target)) {
+        this.focus()
+      }
     },
     __emitValue(v) {
       this.$emit('input', v)
@@ -183,4 +293,20 @@ export default {
 </script>
 
 <style scoped>
+  .pk-dialog__justifier--animation-shake {
+    animation: shake .12s
+  }
+
+  @keyframes shake {
+    0% {
+      transform: scale(1.0,1.0)
+    }
+    50% {
+      transform: scale(1.02,1.02)
+    }
+    100% {
+      transform: scale(1.0,1.0)
+    }
+  }
+
 </style>
