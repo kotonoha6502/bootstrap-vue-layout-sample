@@ -5,7 +5,7 @@
   >
     <template v-slot:control="{ focus, blur }">
       <input
-        type="text"
+        :type="type"
         ref="native"
         class="pk-input__native"
         :style="nativeInputStyle"
