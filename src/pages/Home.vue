@@ -1,125 +1,51 @@
 <template>
-  <b-container fluid>
-    <b-select :options="options" v-model="position"/>
-    <b-checkbox v-model="seamless" />
-    <b-button
-      variant="link"
-      @click="showDialog = !showDialog"
-    >
-      Show Dialog
-    </b-button>
-
-    <pk-dialog
-      v-model="showDialog"
-      :seamless="seamless"
-      :position="position"
-    >
-      <b-card style="overflow: auto; height: 100%">
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
-        </p>
-      </b-card>
-    </pk-dialog>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="outlined"
-            outlined
-            square
-            clearable
-            color="purple"
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="Label colored"
-            label-color="orange"
-            outlined
-            color="green"
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="Filled"
-            filled
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="Outlined & filled"
-            filled
-            outlined
+  <b-container fluid="">
+    <b-row>
+      <b-col cols="12">
+        <pk-slide
+          v-model="page"
         >
-          <template v-slot:append>
-            <img src="../assets/logo.png" width="24px" />
-          </template>
+          <pk-slide-page
+            name="hoge"
+            title="テキストベースのタイトル"
+          >
+            ページ１
+          </pk-slide-page>
 
-          <template v-slot:prepend>
-            <v-fa icon="user" style="color: dodgerblue"/>
-          </template>
-        </pk-input>
-      </b-col>
-    </b-row>
+          <pk-slide-page name="foo">
+            <template #title>
+              <v-fa icon="plane" /> タイトル～～～！！
+            </template>
+            　ページ２
+          </pk-slide-page>
 
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-            label="Label(stacked)"
-            stack-label
-        />
-      </b-col>
-    </b-row>
+          <pk-slide-page name="fuga">
+            <table>
+              <thead>
+              <tr>
+                <th>名前</th>
+                <th>能力</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>博麗霊夢</td>
+                <td>空を飛べる程度の能力</td>
+              </tr>
+              <tr>
+                <td>霧雨魔理沙</td>
+                <td>魔法を使う程度の能力</td>
+              </tr>
+              <tr>
+                <td>十六夜咲夜</td>
+                <td>時を止める程度の能力</td>
+              </tr>
+              </tbody>
+            </table>
+          </pk-slide-page>
 
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-          v-model="inputText"
-          placeholder="プレースホルダー"
-        >
-          <template v-slot:prepend>
-            <v-fa icon="home" size="lg" style="color: rebeccapurple" />
-          </template>
-        </pk-input>
-      </b-col>
-    </b-row>
+        </pk-slide>
 
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-          label="ラベルとプレースホルダー"
-          v-model="inputText"
-          placeholder="ここに入力"
-          outlined
-          bg-color="lavender"
-          color="brown"
-        />
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-3 mb-3">
-      <b-col offset="1" cols="4">
-        <pk-input
-          label="Label(stacked) & placeholder"
-          v-model="inputText"
-          outlined
-          stack-label
-          clearable
-          placeholder="ここに入力"
-        >
-          <template v-slot:append>
-            <v-fa icon="edit" size="lg" style="color: orange"/>
-          </template>
-        </pk-input>
       </b-col>
     </b-row>
   </b-container>
@@ -129,15 +55,19 @@
 // @ is an alias to /src
 import PkInput from '@/components/Form/PkInput.vue'
 import PkDialog from '@/components/PkDialog.vue'
+import { PkSlide, PkSlidePage } from '@/components/Slide'
 
 export default {
   name: 'Home',
   components: {
     PkInput,
     PkDialog,
+    PkSlide,
+    PkSlidePage
   },
   data () {
     return {
+      page: "hoge",
       inputText: "",
       showDialog: false,
       position: "standard",
