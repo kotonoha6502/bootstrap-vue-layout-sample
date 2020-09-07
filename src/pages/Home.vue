@@ -4,6 +4,7 @@
       <b-col cols="12">
         <pk-slide
           v-model="page"
+          style="height: 75px"
         >
           <pk-slide-page
             name="hoge"

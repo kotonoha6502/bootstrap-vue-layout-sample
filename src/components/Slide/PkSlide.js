@@ -194,6 +194,8 @@ export default Vue.extend({
                     staticClass: 'pk-slide__control-container--page-view',
                     style: {
                         width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
                         flexWrap: 'nowrap',
                     }
                 }, [ this.__renderSlide(h) ])
